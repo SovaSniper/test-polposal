@@ -1,0 +1,26 @@
+name: Run npm start with argument on issue close
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    if: ${{ github.event.label.name == 'in progress' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run npm script with issue data
+        run: npm run start -- ${{ github.event.issue.title }}
